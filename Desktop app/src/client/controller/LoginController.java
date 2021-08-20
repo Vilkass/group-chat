@@ -36,11 +36,7 @@ public class LoginController implements Initializable {
         // Check if server is online
         if(!Client.checkConnection()){
             // Show alert
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText(null);
-            alert.setTitle("Error!");
-            alert.setContentText("Could not connect to server!");
-            alert.show();
+            showAlert("Could not connect to server!");
             return;
         }
 
@@ -49,7 +45,12 @@ public class LoginController implements Initializable {
         ClientUIController mainWindow;
         if(!usernameField.getText().equals("")){
             // Username provided
-            mainWindow = new ClientUIController(usernameField.getText(), false);
+            if(usernameField.getText().contains(" ")){
+                // Contains whitespaces (show error)
+                showAlert("Username can not contain white spaces!");
+                return;
+            }
+            mainWindow = new ClientUIController(usernameField.getText().trim(), false);
         }else{
             // Username not provided (GHOST MODE)
             mainWindow = new ClientUIController(usernameField.getText(), true);
@@ -65,6 +66,16 @@ public class LoginController implements Initializable {
             e.printStackTrace();
         }
 
+    }
+
+
+
+    private void showAlert(String message){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setHeaderText(null);
+        alert.setTitle("Error!");
+        alert.setContentText(message);
+        alert.show();
     }
 
 }

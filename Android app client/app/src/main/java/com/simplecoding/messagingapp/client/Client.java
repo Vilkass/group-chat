@@ -4,6 +4,7 @@ import android.widget.TextView;
 import com.simplecoding.messagingapp.config.ServerConfig;
 import java.io.*;
 import java.net.Socket;
+import java.util.NoSuchElementException;
 import java.util.concurrent.LinkedBlockingDeque;
 
 public class Client {
@@ -32,6 +33,13 @@ public class Client {
 
             // Server welcome message
             String welcomeMessage = in.readUTF();
+            if(welcomeMessage.equals(ServerConfig.USERNAME_TAKEN)){
+                // Username is taken
+                in.close();
+                out.close();
+                socket.close();
+                throw new NoSuchElementException();
+            }
             chat.append(welcomeMessage);
 
             addMessagesToClient = new Thread(){

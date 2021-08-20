@@ -114,6 +114,18 @@ public class Server {
                 }
 
                 if(!username.isEmpty()){
+                    // Check if such username is already connected
+                    for(String connectedUsers : clientsList.getItems()){
+                        if(username.equals(connectedUsers)){
+                            out.writeUTF(ServerConfig.USERNAME_TAKEN);
+                            connectedClients.remove(this);
+                            this.in.close();
+                            this.out.close();
+                            this.socket.close();
+                            return;
+                        }
+                    }
+                    // Allow username
                     addClientToUi(this.username);
                     out.writeUTF("Connection accepted\nWelcome " + this.username);
 

@@ -1,5 +1,6 @@
 package com.simplecoding.messagingapp;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
@@ -7,6 +8,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import com.simplecoding.messagingapp.client.Client;
 import com.simplecoding.messagingapp.config.ServerConfig;
@@ -16,6 +19,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.NoSuchElementException;
 
 public class ChatActivity extends AppCompatActivity {
 
@@ -38,15 +42,29 @@ public class ChatActivity extends AppCompatActivity {
 
         setUpComponents();
 
-        Thread clientThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
+        try {
+            Thread clientThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
 
-                client = new Client(username, chat);
+                    client = new Client(username, chat);
 
-            }
-        });
-        clientThread.start();
+                }
+            });
+            clientThread.start();
+        }catch (NoSuchElementException e){
+
+            // Username taken alert
+            new AlertDialog.Builder(ChatActivity.this).setTitle("Error")
+                    .setMessage("Username is taken!")
+                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                        }
+                    }).show();
+
+        }
 
     }
 

@@ -13,4 +13,7 @@ public class ServerConfig {
             ALL_USERS+" - Displays all users online"+
             "\n =======================";
 
+    // Server messages
+    public static String USERNAME_TAKEN = "Username already taken";
+
 }
